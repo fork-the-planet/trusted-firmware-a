@@ -11,8 +11,9 @@ include ${MAKE_HELPERS_DIRECTORY}defaults.mk
 include ${MAKE_HELPERS_DIRECTORY}toolchain.mk
 
 FIPTOOL ?= fiptool$(.exe)
-PROJECT := $(notdir ${FIPTOOL})
-OBJECTS := fiptool.o tbbr_config.o
+PROJECT := ${FIPTOOL}
+PROJECT_DIR := $(dir ${FIPTOOL})
+OBJECTS := ${PROJECT_DIR}/fiptool.o ${PROJECT_DIR}/tbbr_config.o
 STATIC ?= 0
 
 override CPPFLAGS += -D_GNU_SOURCE -D_XOPEN_SOURCE=700
@@ -78,7 +79,7 @@ ${PROJECT}: ${OBJECTS} Makefile
 	$(s)echo "Built $@ successfully"
 	$(s)echo
 
-%.o: %.c Makefile
+${PROJECT_DIR}/%.o: %.c Makefile
 	$(s)echo "  HOSTCC  $<"
 	$(q)$(host-cc) -c ${CPPFLAGS} ${HOSTCCFLAGS} ${INCLUDE_PATHS} -MD -MP $< -o $@
 
